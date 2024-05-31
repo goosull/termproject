@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
+const canvasRoutes = require('./routes/canvasRoutes');
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -16,5 +17,7 @@ app.use(cors())
 app.use(express.json());
 
 app.use('/api/users', userRoutes);
+
+app.use('/api/canvas', canvasRoutes);
 
 app.listen(port, () => console.log(`Server listening on port ${port}`));
