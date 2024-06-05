@@ -37,7 +37,7 @@ const Sketch = () => {
 
 	useEffect(() => {
 		document.addEventListener('keydown', (event) => {
-			if (event.key === 'Delete') {
+			if (event.key === 'Delete' || event.key === 'Backspace') {
 				handleDelete();
 			}
 		});
