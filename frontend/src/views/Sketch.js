@@ -1,9 +1,11 @@
 import {useCallback, useState, useEffect, useRef} from 'react';
 import Button from '@enact/sandstone/Button';
+import Switch from '@enact/sandstone/Switch';
 import {fabric} from 'fabric';
 
 const Sketch = () => {
 	const [canvas, setCanvas] = useState();
+	const [isDrawingMode, setIsDrawingMode] = useState(true);
 	const bgColor = useRef('#FFFFFF');
 
 	useEffect(() => {
@@ -38,6 +40,16 @@ const Sketch = () => {
 				backgroundOpacity="opaque"
 				onClick={downloadCanvas}
 			/>
+			<span style={{ marginLeft: '10px' }}>Drawing Mode</span>
+			<Switch
+				backgroundOpacity="opaque"
+				selected={isDrawingMode}
+				onClick={() => {
+					setIsDrawingMode(!isDrawingMode);
+					canvas.isDrawingMode = !isDrawingMode;
+				}}
+			/>
+
 			<canvas id="canvas" />
 		</div>
 	);
