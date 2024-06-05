@@ -1,6 +1,6 @@
 import {useCallback, useState, useEffect, useRef} from 'react';
 import Button from '@enact/sandstone/Button';
-import Switch from '@enact/sandstone/Switch';
+import Dropdown from '@enact/sandstone/Dropdown';
 import {fabric} from 'fabric';
 
 const Sketch = () => {
@@ -14,7 +14,8 @@ const Sketch = () => {
 				height: 780,
 				width: 1700,
 				backgroundColor: bgColor.current,
-				isDrawingMode: true
+				isDrawingMode: true,
+				isEraseMode: false,
 			})
 		);
 	}, []);
@@ -34,6 +35,14 @@ const Sketch = () => {
 				canvas.remove(activeObject);
 				canvas.renderAll();
 			}
+
+			const activeGroup = canvas.getActiveObjects();
+			if (activeGroup) {
+				activeGroup.forEach((obj) => {
+					canvas.remove(obj);
+					canvas.renderAll();
+				});
+			}
 		}
 	}, [canvas]);
 
@@ -44,6 +53,50 @@ const Sketch = () => {
 			}
 		});
 	}, [handleDelete]);
+
+	const swapMode = useCallback((mode) => {
+		if (canvas) {
+			switch (mode.data) {
+				case "Paint":
+					canvas.isDrawingMode = true;
+					setIsDrawingMode(true);
+					canvas.isEraseMode = false;
+					canvas.freeDrawingBrush.color = '#000000';
+					break;
+				case "Select":
+					canvas.isDrawingMode = false;
+					setIsDrawingMode(false);
+					canvas.isEraseMode = false;
+					break;
+				case "Erase":
+					canvas.isDrawingMode = true;
+					setIsDrawingMode(true);
+					canvas.isEraseMode = true;
+					canvas.freeDrawingBrush.color = bgColor.current;
+					break;
+				default:
+					break;
+			}
+		}
+	}, [canvas]);
+
+	useEffect(() => {
+		if (canvas) {
+			canvas.on("path:created", e => { // delete path
+				const path = e.path; 
+				if (canvas.isEraseMode) {
+					const objects = canvas.getObjects();
+					for (let i = 0; i < objects.length; i++) {
+						if (objects[i].intersectsWithObject(path)) {
+							canvas.remove(objects[i]);
+							break;
+						}
+					}
+					canvas.remove(path); // 지우개 경로 자체도 제거
+				}
+			});
+		}
+	}, [canvas]);
 
 	return (
 		<div>
@@ -59,14 +112,11 @@ const Sketch = () => {
 				backgroundOpacity="opaque"
 				onClick={downloadCanvas}
 			/>
-			<span style={{ marginLeft: '10px' }}>Drawing Mode</span>
-			<Switch
+			<span style={{ marginLeft: '5px' }}>Mode</span>
+			<Dropdown
 				backgroundOpacity="opaque"
-				selected={isDrawingMode}
-				onClick={() => {
-					setIsDrawingMode(!isDrawingMode);
-					canvas.isDrawingMode = !isDrawingMode;
-				}}
+				children={["Paint", "Select", "Erase"]}
+				onSelect={swapMode}
 			/>
 
 			<canvas id="canvas" />
