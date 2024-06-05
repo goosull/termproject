@@ -28,10 +28,12 @@ const Sketch = () => {
 
 	// Delete selected object
 	const handleDelete = useCallback(() => {
-		const activeObject = canvas.getActiveObject();
-		if (activeObject) {
-			canvas.remove(activeObject);
-			canvas.renderAll();
+		if (canvas){
+			const activeObject = canvas.getActiveObject();
+			if (activeObject) {
+				canvas.remove(activeObject);
+				canvas.renderAll();
+			}
 		}
 	}, [canvas]);
 
