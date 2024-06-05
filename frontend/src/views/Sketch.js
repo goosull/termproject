@@ -26,6 +26,23 @@ const Sketch = () => {
 
 	const downloadCanvas = useCallback(() => {}, []);
 
+	// Delete selected object
+	const handleDelete = useCallback(() => {
+		const activeObject = canvas.getActiveObject();
+		if (activeObject) {
+			canvas.remove(activeObject);
+			canvas.renderAll();
+		}
+	}, [canvas]);
+
+	useEffect(() => {
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Delete') {
+				handleDelete();
+			}
+		});
+	}, [handleDelete]);
+
 	return (
 		<div>
 			<Button
