@@ -1,11 +1,15 @@
 import {useCallback, useState, useEffect, useRef} from 'react';
 import Button from '@enact/sandstone/Button';
 import Dropdown from '@enact/sandstone/Dropdown';
+import Slider from '@enact/sandstone/Slider';
 import {fabric} from 'fabric';
+import css from './Sketch.module.less';
 
 const Sketch = () => {
 	const [canvas, setCanvas] = useState();
 	const [isDrawingMode, setIsDrawingMode] = useState(true);
+	const [strokeWidth, setStrokeWidth] = useState(10);
+	const [pickerColor, setPickerColor] = useState('#fff333');
 	const bgColor = useRef('#FFFFFF');
 
 	useEffect(() => {
@@ -68,10 +72,16 @@ const Sketch = () => {
 					setIsDrawingMode(false);
 					canvas.isEraseMode = false;
 					break;
-				case "Erase":
+				case "Stroke Erase":
 					canvas.isDrawingMode = true;
 					setIsDrawingMode(true);
 					canvas.isEraseMode = true;
+					canvas.freeDrawingBrush.color = bgColor.current;
+					break;
+				case "Normal Erase":
+					canvas.isDrawingMode = true;
+					setIsDrawingMode(true);
+					canvas.isEraseMode = false;
 					canvas.freeDrawingBrush.color = bgColor.current;
 					break;
 				default:
@@ -83,7 +93,7 @@ const Sketch = () => {
 	useEffect(() => {
 		if (canvas) {
 			canvas.on("path:created", e => { // delete path
-				const path = e.path; 
+				const path = e.path;
 				if (canvas.isEraseMode) {
 					const objects = canvas.getObjects();
 					for (let i = 0; i < objects.length; i++) {
@@ -97,6 +107,27 @@ const Sketch = () => {
 			});
 		}
 	}, [canvas]);
+
+	useEffect(() => {
+		if (canvas) {
+			canvas.freeDrawingBrush.color = pickerColor;
+		}
+	}, [canvas, pickerColor]);
+
+	const changeColor = useCallback((e) => {
+		setPickerColor(e.target.value);
+	}, []);
+
+	useEffect(() => {
+		if (canvas) {
+			canvas.freeDrawingBrush.width = strokeWidth;
+		}
+	}, [canvas, strokeWidth]);
+
+	const changeWidth = useCallback((e) => {
+		setStrokeWidth(Number(e.value));
+
+	}, []);
 
 	return (
 		<div>
@@ -115,10 +146,24 @@ const Sketch = () => {
 			<span style={{ marginLeft: '5px' }}>Mode</span>
 			<Dropdown
 				backgroundOpacity="opaque"
-				children={["Paint", "Select", "Erase"]}
+				children={["Paint", "Select", "Stroke Erase", "Normal Erase"]}
 				onSelect={swapMode}
 			/>
-
+			<input
+				type="color"
+				defaultValue={pickerColor}
+				onChange={changeColor}
+				className={css.colorInput}
+			/>
+			<Slider
+				defaultValue={20}
+				max={100}
+				min={1}
+				onChange={changeWidth}
+				step = {1}
+				classNamme	= {css.slider}
+				orientation = "horizontal"
+			/>
 			<canvas id="canvas" />
 		</div>
 	);
