@@ -8,7 +8,7 @@ import Account from './Account';
 const Main = props => {
 	return (
 		<Panel {...props}>
-			<Header title={$L('Enact Template')} />
+			<Header title={$L('Enact Sketch App')} />
 			<TabLayout>
 				<Tab title={$L('Home')}>
 					<Home />
