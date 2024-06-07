@@ -21,7 +21,6 @@ const Account = () => {
 			.then(response => {
 				setState(prevState => ({
 					...prevState,
-					users: [...prevState.users, response.data],
 					name: '',
 					passwd: ''
 				}));
@@ -92,7 +91,8 @@ const Account = () => {
 				.then(()=>{
 					setState(prevState => ({
 						...prevState,
-						users: prevState.users.filter(user => user._id !== id),
+						name: '',
+						passwd: '',
 					}));
 				})
 				.then(()=>{
