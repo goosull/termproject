@@ -34,7 +34,6 @@ router.post('/login', async (req, res)=>{
   try{
     const user = await User.find({name: req.body.name});
     if (user.length == 0) {
-      console.log('user not found');
       return res.status(400).json({ message: 'User not found'});
     }
     if (req.body.passwd != user[0].passwd) {
