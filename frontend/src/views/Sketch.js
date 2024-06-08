@@ -1,29 +1,31 @@
-import axios from 'axios';
-import {useCallback, useState, useEffect, useRef} from 'react';
-import Button from '@enact/sandstone/Button';
-import {Dropdown, DropdownBase} from '@enact/sandstone/Dropdown';
+/* eslint-disable enact/prop-types */
+import { stateContext, indexContext, canvasContext} from '../App/Context';
+import {useCallback, useState, useEffect, useRef, useContext} from 'react';
 import {fabric} from 'fabric';
 import { InputField } from '@enact/sandstone/Input';
+import axios from 'axios';
+import Button from '@enact/sandstone/Button';
+import Dropdown from '@enact/sandstone/Dropdown';
 import LoginInfo from '../App/LoginInfo';
 import css from './Sketch.module.less';
 import Slider from '@enact/sandstone/Slider';
-import {useContext} from 'react';
-import { indexContext } from '../App/Context';
-import { stateContext } from '../App/Context';
-import ImageItem from '@enact/sandstone/ImageItem'
+import Popup from '@enact/sandstone/Popup'
+import $L from '@enact/i18n/$L';
+
 
 const Sketch = () => {
 	const [canvas, setCanvas] = useState();
+	const {tmpCanvas, setTmpCanvas} = useContext(canvasContext);
 	const bgColor = useRef('#FFFFFF');
-	const [isDrawingMode, setIsDrawingMode] = useState(true);
+	const [drawingMode, setDrawingMode] = useState(0);
 	const [strokeWidth, setStrokeWidth] = useState(10);
-	const [pickerColor, setPickerColor] = useState('#fff333');
-	const index = useContext(indexContext);
-	const {state, setState} = useContext(stateContext)
+	const [pickerColor, setPickerColor] = useState('#000000');
+	const {state, setState} = useContext(stateContext);
 	const [canvasHistory, setHistory] = useState({
 		history: [],
 		size: 0,
 		pointer: -1,
+		max_size: 10,
 		init: function(sketch) {
 			this.history = [];
 			this.size=1;
@@ -38,6 +40,11 @@ const Sketch = () => {
 			this.history.push(sketch);
 			this.pointer = this.pointer+1;
 			this.size = this.size+1;
+			if (this.size > this.max_size) {
+				this.history.shift();
+				this.size = this.size-1;
+				this.pointer = this.pointer-1;
+			}
 		},
 		undo: function () {
 			if (this.pointer-1 >= 0) {
@@ -51,12 +58,15 @@ const Sketch = () => {
 				return this.history[this.pointer];
 			}
 		}	
-	})
+	});
+	const [loginPopup, loginPopupOpen] = useState(false);
+	const [savePopup, savePopupOpen] = useState(false);
+	const [titlePopup, titlePopupOpen] = useState(false);
 
 	// Load all canvas of user
 	const fetchList = async() => {
 		try {
-			const response = await axios.get('/api/canvas/?userid='+LoginInfo.id);
+			const response = await axios.get('/api/canvas/?user='+LoginInfo.name);
 			setState(prevState=>({...prevState,  canvasList: response.data}));
 		} catch (error) {
 			console.log(error);
@@ -64,7 +74,7 @@ const Sketch = () => {
 	}
 
 	useEffect(() => {
-		setCanvas(new fabric.Canvas('canvas', {
+		setCanvas(new fabric.Canvas('my_canvas', {
 			height: 780,
 			width: 1700,
 			backgroundColor: bgColor.current,
@@ -75,7 +85,7 @@ const Sketch = () => {
 
 	const updateCanvasHistory = ()=>{
 		canvasHistory.update(canvas.toJSON());
-		console.log(canvasHistory);
+		setTmpCanvas(canvas.toJSON());
 	}
 
 
@@ -86,23 +96,6 @@ const Sketch = () => {
 		canvas.backgroundColor = bgColor.current;
 		canvasHistory.update(canvas.toJSON());
 	}, [canvas]);
-	
-	// Delete saved canvas
-	const deleteCanvas = useCallback(() => {
-		canvas.clear();
-		canvas.backgroundColor = bgColor.current;
-
-		if (state.id != null) {
-			axios
-				.delete('/api/canvas/'+state.id)
-				.then(()=>{fetchList();})
-				.then(()=>{setState(prevState=>({...prevState, title: '', id: null}))})
-				.catch(error => console.error(error));
-		}
-
-	}, [canvas, state]);
-
-	const downloadCanvas = useCallback(() => {}, []);
 
 	// Delete selected object
 	const handleDelete = useCallback(() => {
@@ -135,26 +128,26 @@ const Sketch = () => {
 		if (canvas) {
 			switch (mode.data) {
 				case "Paint":
+					setDrawingMode(0);
 					canvas.isDrawingMode = true;
-					setIsDrawingMode(true);
 					canvas.isEraseMode = false;
 					canvas.freeDrawingBrush.color = '#000000';
 					setPickerColor('#000000')
 					break;
 				case "Select":
+					setDrawingMode(1);
 					canvas.isDrawingMode = false;
-					setIsDrawingMode(false);
 					canvas.isEraseMode = false;
 					break;
 				case "Stroke Erase":
+					setDrawingMode(2);
 					canvas.isDrawingMode = true;
-					setIsDrawingMode(true);
 					canvas.isEraseMode = true;
 					canvas.freeDrawingBrush.color = bgColor.current;
 					break;
 				case "Normal Erase":
+					setDrawingMode(3);
 					canvas.isDrawingMode = true;
-					setIsDrawingMode(true);
 					canvas.isEraseMode = false;
 					canvas.freeDrawingBrush.color = bgColor.current;
 					break;
@@ -184,6 +177,11 @@ const Sketch = () => {
 				'mouse:up': updateCanvasHistory,
 			});
 			canvasHistory.init(canvas.toJSON())
+            if (state.id && !tmpCanvas) loadCanvas(state.id);
+			if (tmpCanvas) {
+				console.log(tmpCanvas);
+				canvas.loadFromJSON(tmpCanvas);
+			}
 		}
 	}, [canvas]);
 
@@ -208,49 +206,46 @@ const Sketch = () => {
 
 	}, []);
 
-	// Make new canvas which is not saved.
-	const newCanvas = useCallback(() => {
-		setState(prevState=>({
-			...prevState,
-			title: '',
-			id: null,
-		}))
-		canvas.clear();
-		canvas.backgroundColor = bgColor.current;
-		canvasHistory.init(canvas.toJSON());
-	}, [canvas]);
-
 	// Save new canvas or update already existing canvas.
 	const saveCanvas = useCallback(() => {
 		// Can save only when logged in.
 		if (LoginInfo.id != null) {
+			if (state.title == '') {
+				titlePopupOpen(true);
+				return;
+			}
 			// Save new canvas.
 			if (state.id == null) {
 				axios
-					.post('/api/canvas', {title: state.title, canvas:canvas.toObject(), thumb:canvas.toDataURL({multiplier:0.25, format: 'png'}), user:[LoginInfo.id]})
+					.post('/api/canvas', {title: state.title, canvas:canvas.toObject(), thumb:canvas.toDataURL({multiplier:0.25, format: 'png'}), user:[LoginInfo.name]})
 					.then(response => {
+                        console.log(response);
 						setState(prevState=>({
 							...prevState,
 							canvasList: [...prevState.canvasList, response.data],
-							id:response.id,
+							id:response.data._id,
 						}));
 					})
+					.then(()=>{savePopupOpen(true)})
 					.catch(error => console.error(error));
 			} else {
 				// Update existing canvas.
+				savePopupOpen(true);
 				axios
 					.put('/api/canvas/'+state.id, {title: state.title, canvas:canvas.toObject(), thumb:canvas.toDataURL({multiplier:0.25, format: 'png'})})
 					.then(()=>{
 						fetchList();
 					})
+					.then(()=>{savePopupOpen(true)})
 					.catch(error => console.error(error));
 			}
+		} else {
+			loginPopupOpen(true);
 		}
 	});
 
 	// Load selected canvas from Dropdown menu.
-	const loadCanvas = async(selected) => {
-		let id = state.canvasList[selected.selected]._id;
+	const loadCanvas = async(id) => {
 		try {
 			const response = await axios.get('/api/canvas/'+id);
 			setState(prevState=>({...prevState, title: response.data.title, id:response.data._id}));
@@ -261,116 +256,63 @@ const Sketch = () => {
 		}
 	}
 
-	const loadThumb = async() => {
-		try {
-			const response = await axios.get('/api/canvas/thumb/666332da24abd499ce6bebaf');
-			return response.data;
-		} catch (error) {
-			console.log(error);
-		}
-	}
-	const settingCanvas = ()=>{
-		index.setIndex(1);
-	};
-
 	const doRedo = () =>{
 		canvas.loadFromJSON(canvasHistory.redo());
 	}
 	const doUndo = () =>{
 		canvas.loadFromJSON(canvasHistory.undo());
 	}
-
-	console.log(state.canvasList.map(canv=>canv.title));
-
+    
 	return (
-		<div>
-			{Array.isArray(state.canvasList) ? (
-				<ul>
-					{state.canvasList.map(canv=>{
-						<li>
-							{canv.title}
-							<ImageItem
-								src={canv.thumb} label="test">
-									caption
-							</ImageItem>
-						</li>
-					})}
-				</ul>
-			) : (
-				<p>ERROR</p>
-			)}
+        <div>
+			<div>
+			<InputField
+				type="text"
+				value={state.title}
+				onChange={e => setState(prev => ({...prev, title: e.value}))}
+				placeholder="Title"
+			/>
+			</div>
+
 			<Button
 				icon="trash"
-				iconOnly
 				backgroundOpacity="opaque"
+				iconOnly='true'
 				onClick={clearCanvas}
 			/>
 			<Button
-				icon="trash"
-				iconOnly
-				backgroundOpacity="opaque"
-				onClick={deleteCanvas}
-			/>
-			<Button
-				icon="download"
-				iconOnly
-				backgroundOpacity="opaque"
-				onClick={downloadCanvas}
-			/>
-			<Button
-				icon="plus"
-				iconOnly
-				backgroundOpacity="opaque"
-				onClick={newCanvas}
-			/>
-			<Button
 				icon="files"
-				iconOnly
 				backgroundOpacity="opaque"
+				iconOnly='true'
 				onClick={saveCanvas}
 			/>
 			<Button
-				icon="setting"
-				iconOnly
+				icon="arrowhookleft"
 				backgroundOpacity="opaque"
-				onClick={settingCanvas}
-			/>
-			<Button
-				icon="redo"
-				iconOnly
-				backgroundOpacity="opaque"
-				onClick={doRedo}
-			/>
-			<Button
-				icon="undo"
-				iconOnly
-				backgroundOpacity="opaque"
+				iconOnly='true'
 				onClick={doUndo}
+			/>
+			<Button
+				icon="arrowhookright"
+				backgroundOpacity="opaque"
+				iconOnly='true'
+				onClick={doRedo}
 			/>
 
 			<span style={{ marginLeft: '5px' }}>Mode</span>
 			<Dropdown
 				backgroundOpacity="opaque"
+				selected={drawingMode}
 				children={["Paint", "Select", "Stroke Erase", "Normal Erase"]}
 				onSelect={swapMode}
 			/>
 			<input
 				type="color"
 				defaultValue={pickerColor}
+				value={pickerColor}
 				onChange={changeColor}
 				className={css.colorInput}
 			/>
-			<Dropdown
-				defaultSelected={0}
-				inline
-				title="Load Canvas"
-				onSelect={loadCanvas}
-				>
-				{Array.isArray(state.canvasList) ? (
-					state.canvasList.map(canvas_data => canvas_data.title)
-				) : []}
-				
-			</Dropdown>
 
 			<Slider
 				defaultValue={20}
@@ -378,22 +320,23 @@ const Sketch = () => {
 				min={1}
 				onChange={changeWidth}
 				step = {1}
-				classNamme	= {css.slider}
+				className	= {css.slider}
 				orientation = "horizontal"
 			/>
 
-			<InputField
-				type="text"
-				value={state.title}
-				onChange={e => setState(prev => ({...prev, title: e.value}))}
-				placeholder="Name"
-			/>
+			<canvas id="my_canvas" />
 
-
-			<canvas id="canvas" />
-
-		</div>
-	);
+			<Popup type="overlay" open={loginPopup} onClose={()=>loginPopupOpen(false)}>
+				<span>{$L('Please login.')}</span>
+			</Popup>
+			<Popup type="overlay" open={savePopup} onClose={()=>savePopupOpen(false)}>
+				<span>{$L('Saved.')}</span>
+			</Popup>
+			<Popup type="overlay" open={titlePopup} onClose={()=>titlePopupOpen(false)}>
+				<span>{$L('Please enter a title.')}</span>
+			</Popup>
+        </div>
+    )
+	
 };
-
 export default Sketch;

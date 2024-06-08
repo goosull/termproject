@@ -1,4 +1,4 @@
-import {createContext, useContext} from 'react';
+import {createContext} from 'react';
 
 export const indexContext = createContext({
 	index: 0,
@@ -12,4 +12,9 @@ export const stateContext = createContext({
 		id: null, // id of current (opened) scatch. null means new scatch.
     },
     setState: (i)=>{}
-})
+});
+
+export const canvasContext = createContext({
+    tmpCanvas: null,
+    setTmpCanvas: (i)=>{}
+});

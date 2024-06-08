@@ -1,21 +1,17 @@
 import TabLayout, {Tab} from '@enact/sandstone/TabLayout';
 import {Header, Panel} from '@enact/sandstone/Panels';
 import $L from '@enact/i18n/$L';
-import Home from './Home';
-import Sketch from './Sketch';
 import Account from './Account';
+import SketchList from './SketchList';
 
 
 const Main = props => {
 	return (
 		<Panel {...props}>
-			<Header title={$L('Enact Template')} />
+			<Header title={$L('Sketch App')} />
 			<TabLayout>
-				<Tab title={$L('Home')}>
-					<Home />
-				</Tab>
 				<Tab title={$L('Sketch')}>
-					<Sketch />
+					<SketchList />
 				</Tab>
 				<Tab title={$L('Account')}>
 					<Account />
