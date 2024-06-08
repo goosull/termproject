@@ -33,7 +33,7 @@ router.post('/', async (req, res) => {
 router.post('/login', async (req, res)=>{
   try{
     const user = await User.find({name: req.body.name});
-    if (!user) {
+    if (user.length == 0) {
       console.log('user not found');
       return res.status(400).json({ message: 'User not found'});
     }
@@ -72,13 +72,13 @@ router.delete('/:id', async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    let user_id = user.id;
-    const canvas_list = await Canvas.find({user: user_id});
+    let user_name = user.name;
+    const canvas_list = await Canvas.find({user: user_name});
     for await (const canvas of canvas_list) {
         if (canvas.user.length == 1) {
           await Canvas.findByIdAndDelete(canvas.id)
         } else { 
-          await Canvas.findByIdAndUpdate(canvas.id, {user: canvas.user.filter((e)=>e!=user_id)})
+          await Canvas.findByIdAndUpdate(canvas.id, {user: canvas.user.filter((e)=>e!=user_name)})
         }
     }
 
