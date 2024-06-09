@@ -99,39 +99,7 @@ User Object는 다음과 같습니다.
 
 ---
 
-#### 1.4. 기존 user 정보 수정하기
-
-데이터베이스에 이미 존재하는 user 중 해당 id의 user 정보를 업데이트한다. 
-
-#### Request
-
-수정할 user의 id를 URL을 통해 전달합니다.
-
-| ID     | URL             | HOST                        | METHOD |
-| ------ | --------------- | --------------------------- | ------ |
-|  BA01-4   | /api/users/:id     | localhost:4000           | PUT    |
-
----
-
-#### Parameter
-
-| Name             | Type     | Description                | Required |
-| ---------------- | -------- | -------------------------- | -------- |
-| user             | Object   | user 정보를 포함하는 object    | True    |
-| - name           | String   | user의 이름                | True    |
-| - email          | String   | user의 이메일 주소           | True     |
-
----
-
-### Response 
-
-| Name | Type   | Description                 |
-| ---- | ------ | --------------------------- |
-| user | Object | 업데이트된 user object         |
-
----
-
-#### 1.5. user 정보 삭제하기
+#### 1.4. user 정보 삭제하기
 
 데이터베이스에 존재하는 user 중 해당 id의 user 정보를 삭제한다. 해당 유저가 권한을 갖고 있는 모든 캔버스에서 권한이 삭제되며, 해당 유저에게만 권한이 있는 캔버스는 삭제됩니다.
 
@@ -141,7 +109,7 @@ User Object는 다음과 같습니다.
 
 | ID     | URL             | HOST                        | METHOD |
 | ------ | --------------- | --------------------------- | ------ |
-|  BA01-5   | /api/users/:id  | localhost:4000             | DELETE   |
+|  BA01-4   | /api/users/:id  | localhost:4000             | DELETE   |
 
 ---
 
