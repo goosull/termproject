@@ -203,7 +203,7 @@ const Sketch = () => {
 					const pointer = canvas.getPointer(e.e);
 					const color = canvas.getContext('2d').getImageData(pointer.x, pointer.y, 1, 1).data;
 					const hex = '#' + ColorToHex(color[0]) + ColorToHex(color[1]) + ColorToHex(color[2]);
-					console.log(hex);
+					console.log(canvas.getContext('2d').getImageData(pointer.x, pointer.y, 1, 1))
 					setPickerColor(hex);
 				}
 			});

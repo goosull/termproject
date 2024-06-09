@@ -14,6 +14,7 @@ const SketchSetting = () => {
     const index = useContext(indexContext);
 	const [sharePopup, sharePopupOpen] = useState(false);
 	const [savePopup, savePopupOpen] = useState(false);
+	const [namePopup, namePopupOpen] = useState(false);
 
     useEffect(()=>{
         fetchList();
@@ -63,7 +64,8 @@ const SketchSetting = () => {
 				.catch(err=>console.error(err));
 			}
 		} else {
-			savePopupOpen(true);
+			if (!canvasinfo) savePopupOpen(true);
+			else if (!((!canvasinfo.user.includes(share)) && (!share == ''))) namePopupOpen(true);
 		}
 	});
 
@@ -135,6 +137,9 @@ const SketchSetting = () => {
 			</Popup>
 			<Popup type="overlay" open={savePopup} onClose={()=>savePopupOpen(false)}>
 				<span>{$L('This sketch is not saved. Please save before share.')}</span>
+			</Popup>
+			<Popup type="overlay" open={namePopup} onClose={()=>namePopupOpen(false)}>
+				<span>{$L('Please check user name.')}</span>
 			</Popup>
         </div>
     )

@@ -1,7 +1,7 @@
 {
-	"name": "enact-template",
+	"name": "sketch",
 	"version": "1.0.0",
-	"description": "Enact Template",
+	"description": "Sketch App",
 	"author": "LG Electronics, Inc.",
 	"main": "src/index.js",
 	"scripts": {
