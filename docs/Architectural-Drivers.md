@@ -43,19 +43,19 @@ Sketch App은 WebOS TV 상에서 스케치, 그리기 기능과 스케치 저장
 #### 3.1.1. Client로부터 입력받을 interface 제공
 ID | Requirement | API ID | Test Case ID
 --- | --- | --- | ---
-FR01-1 | client로부터 유저 정보를 전달 받으면, backend 서버는 데이터베이스의 필드에 맞게 파싱한다.<br>-데이터베이스의 필드에는 다음 요소들이 포함되어야 한다<br><ul><li>_id: 유저를 구분할 고유한 ID</li><li>name: 유저의 이름</li><li>passwd: 유저의 비밀번호</li></ul> | <ul><li>BA01-2</li><li>BA01-4</li><li>BA01-5</li></ul> | <ul><li>TC01-1</li><li>TC01-2</li><li>TC01-3></li></ul>
-FR01-2 | backend 서버는 필드에 맞게 파싱된 데이터를 데이터베이스에 저장한다. |  <ul><li>BA01-2</li><li>BA01-4</li><li>BA01-5</li></ul> | <ul<li>TC01-1</li><li>TC01-2</li><li>TC01-3></li></ul> 
+FR01-1 | client로부터 유저 정보를 전달 받으면, backend 서버는 데이터베이스의 필드에 맞게 파싱한다.<br>-데이터베이스의 필드에는 다음 요소들이 포함되어야 한다<br><ul><li>_id: 유저를 구분할 고유한 ID</li><li>name: 유저의 이름</li><li>passwd: 유저의 비밀번호</li></ul> | <ul><li>BA01-2</li><li>BA01-4</li><li>BA01-5</li></ul> | <ul><li>TC01-1</li><li>TC01-2</li><li>TC01-3</li></ul>
+FR01-2 | backend 서버는 필드에 맞게 파싱된 데이터를 데이터베이스에 저장한다. |  <ul><li>BA01-2</li><li>BA01-4</li><li>BA01-5</li></ul> | <ul><li>TC01-1</li><li>TC01-2</li><li>TC01-3</li></ul> 
 FR01-3 | client로부터 캔버스(스케치) 정보를 전달 받으면, backend 서버는 데이터베이스의 필드에 맞게 파싱한다.<br>-데이터베이스의 필드에는 다음 요소들이 포함되어야 한다<br><ul><li>_id: 캔버스를 구분할 고유한 ID</li><li>title: 캔버스의 제목</li><li>canvas: 캔버스 정보</li><li>thumb: 캔버스 대표이미지</li><li>user: 캔버스 접근 권한을 가진 유저정보</li></ul> | <ul><li>BA02-4</li><li>BA02-5</li><li>BA02-6</li><li>BA02-7</li></ul> | <ul><li>TC02-1</li><li>TC02-2</li><li>TC02-3</li><li>TC02-4</li></ul>
 FR01-4 | backend 서버는 필드에 맞게 파싱된 데이터를 데이터베이스에 저장한다. |  <ul><li>BA02-4</li><li>BA02-5</li><li>BA02-6</li><li>BA02-7</li></ul> | <ul><li>TC02-1</li><li>TC02-2</li><li>TC02-3</li><li>TC02-4</li></ul> 
 
 #### 3.1.2. 데이터베이스의 데이터요청에 대한 처리
 ID | Requirement | API ID | Test Case ID
 --- | --- | --- | ---
-FR02-1 | frontend 서버로부터 모든 유저의 정보을 요청받으면 backend 서버는 데이터베이스로부터 모든 유저의 정보를 frontend 서버로 전송한다. | BA01-1 | . 
-FR02-2 | frontend 서버로부터 user name, passwd와 일치하는 정보가 있는지 요첩받으면 backend 서버는 데이터베이스를 검색하여 일치 여부를 frontend 서버로 전송한다. | BA01-3 | .
-FR02-3 | frontend 서버로부터 특정 유저의 모든 캔버스 정보를 요청받으면 backend 서버는 데이터베이스로부터 특정 유저의 스케치를 frontend 서버로 전송한다. | BA02-1 | .
-FR02-4 | frontend 서버로부터 특정 캔버스를 요청받으면 backend 서버는 해당하는 캔버스를 찾아 frontend 서버로 전송한다. | BA02-2 | .
-FR02-5 | frontend 서버로부터 특정 캔버스의 대표이미지를 요청받으면 backend 서버는 해당하는 캔버스를 찾아 그 캔버스의 대표이미지를 frontend 서버로 전송한다. | BA02-3 | .
+FR02-1 | frontend 서버로부터 모든 유저의 정보을 요청받으면 backend 서버는 데이터베이스로부터 모든 유저의 정보를 frontend 서버로 전송한다. | BA01-1 | TC03-1 
+FR02-2 | frontend 서버로부터 user name, passwd와 일치하는 정보가 있는지 요첩받으면 backend 서버는 데이터베이스를 검색하여 일치 여부를 frontend 서버로 전송한다. | BA01-3 | TC03-2
+FR02-3 | frontend 서버로부터 특정 유저의 모든 캔버스 정보를 요청받으면 backend 서버는 데이터베이스로부터 특정 유저의 스케치를 frontend 서버로 전송한다. | BA02-1 | TC03-3
+FR02-4 | frontend 서버로부터 특정 캔버스를 요청받으면 backend 서버는 해당하는 캔버스를 찾아 frontend 서버로 전송한다. | BA02-2 | TC03-4
+FR02-5 | frontend 서버로부터 특정 캔버스의 대표이미지를 요청받으면 backend 서버는 해당하는 캔버스를 찾아 그 캔버스의 대표이미지를 frontend 서버로 전송한다. | BA02-3 | TC03-5
 
 ---
 
