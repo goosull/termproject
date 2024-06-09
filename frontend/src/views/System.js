@@ -1,11 +1,19 @@
 import BodyText from '@enact/sandstone/BodyText';
 import $L from '@enact/i18n/$L';
 import {useConfigs, useCpuConfigs, useMemConfigs} from '../hooks/configs';
+import { useContext, useEffect } from 'react';
+import { globalCanvasContext } from '../App/Context';
 
 const System = () => {
 	const data = useConfigs();
 	const cpu_data = useCpuConfigs();
 	const mem_data = useMemConfigs();
+	const {canvas, setCanvas} = useContext(globalCanvasContext);
+
+	useEffect(() => {
+		if (canvas && canvas.lowerCanvasEl) canvas.dispose();
+	}, []);
+
 	return (
 		<>
 			<BodyText>{$L('This is page for system monitoring.')}</BodyText>

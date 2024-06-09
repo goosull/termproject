@@ -2,10 +2,11 @@
 import Button from '@enact/sandstone/Button';
 import {InputField} from '@enact/sandstone/Input';
 import axios from 'axios';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
 import $L from '@enact/i18n/$L';
 import LoginInfo from '../App/LoginInfo';
 import Popup from '@enact/sandstone/Popup'
+import { globalCanvasContext } from '../App/Context';
 
 const Account = () => {
 
@@ -19,6 +20,7 @@ const Account = () => {
 	const [existPopup, existPopupOpen] = useState(false);
 	const [notExistPopup, notExistPopupOpen] = useState(false);
 	const [passPopup, passPopupOpen] = useState(false);
+	const {canvas, setCanvas} = useContext(globalCanvasContext);
 
 	// Add User.
 	const handleAddUser = () => {
@@ -138,6 +140,7 @@ const Account = () => {
 
 	useEffect(() => {
 		checkLogin();
+		if (canvas && canvas.lowerCanvasEl) canvas.dispose();
 	}, []);
 
 	return (

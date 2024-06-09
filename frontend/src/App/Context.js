@@ -18,3 +18,8 @@ export const canvasContext = createContext({
     tmpCanvas: null,
     setTmpCanvas: (i)=>{}
 });
+
+export const globalCanvasContext = createContext({
+    canvas: null,
+    setCanvas: (i)=>{}
+});

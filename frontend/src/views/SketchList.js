@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { useCallback, useState, useEffect, useContext } from 'react';
-import { indexContext, stateContext } from '../App/Context';
+import { globalCanvasContext, indexContext, stateContext } from '../App/Context';
 import LoginInfo from '../App/LoginInfo';
 import ImageItem from '@enact/sandstone/ImageItem'
 import Button from '@enact/sandstone/Button';
@@ -9,6 +9,7 @@ import $L from '@enact/i18n/$L';
 const SketchList = () => {
 	const index = useContext(indexContext);
 	const {state, setState} = useContext(stateContext);
+	const {canvas, setCanvas} = useContext(globalCanvasContext);
 	const [canvIdx, setCanvIdx] = useState(0);
 
 	const editCanvas = (canv)=>{
@@ -40,6 +41,7 @@ const SketchList = () => {
 
 	useEffect(()=>{
 		fetchList();
+		if (canvas && canvas.lowerCanvasEl) canvas.dispose();
 		setCanvIdx(0);
 	}, []);
 

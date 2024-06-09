@@ -4,7 +4,7 @@
 	"vendor": "LG Electronics, Inc.",
 	"type": "web",
 	"main": "index.html",
-	"title": "ketch",
+	"title": "Sketch",
 	"accessibility": {"supportsAudioGuidance": true},
 	"allowAudioCapture": false,
 	"allowVideoCapture": false,

@@ -1,5 +1,5 @@
 /* eslint-disable enact/prop-types */
-import { stateContext, indexContext, canvasContext} from '../App/Context';
+import { stateContext, indexContext, canvasContext, globalCanvasContext} from '../App/Context';
 import {useCallback, useState, useEffect, useRef, useContext} from 'react';
 import {fabric} from 'fabric';
 import { InputField } from '@enact/sandstone/Input';
@@ -14,7 +14,7 @@ import $L from '@enact/i18n/$L';
 
 
 const Sketch = () => {
-	const [canvas, setCanvas] = useState();
+	const {canvas, setCanvas} = useContext(globalCanvasContext);
 	const {tmpCanvas, setTmpCanvas} = useContext(canvasContext);
 	const bgColor = useRef('#FFFFFF');
 	const [drawingMode, setDrawingMode] = useState(0);
@@ -193,11 +193,9 @@ const Sketch = () => {
 			});
 			canvasHistory.init(canvas.toJSON())
             if (state.id && !tmpCanvas) loadCanvas(state.id);
-			if (tmpCanvas) {
-				console.log(tmpCanvas);
+			if (tmpCanvas && canvas.lowerCanvasEl) {
 				canvas.loadFromJSON(tmpCanvas);
 			}
-
 			canvas.on("mouse:down", e => { // color picker
 				if(drawingMode === 4 && canvas.isDrawingMode === false && canvas.isEraseMode === false){
 					const pointer = canvas.getPointer(e.e);

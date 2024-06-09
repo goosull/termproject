@@ -1,4 +1,4 @@
-import { stateContext, indexContext} from '../App/Context';
+import { stateContext, indexContext, globalCanvasContext} from '../App/Context';
 import { useCallback, useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import Button from '@enact/sandstone/Button';
@@ -10,7 +10,8 @@ import $L from '@enact/i18n/$L';
 const SketchSetting = () => {
     const {state, setState} = useContext(stateContext);
 	const [share, setShare] = useState('');
-	const [canvasinfo, setCanvas] = useState();
+	const {canvas, setCanvas} = useContext(globalCanvasContext);
+	const [canvasinfo, setCanvasInfo] = useState();
     const index = useContext(indexContext);
 	const [sharePopup, sharePopupOpen] = useState(false);
 	const [savePopup, savePopupOpen] = useState(false);
@@ -19,6 +20,7 @@ const SketchSetting = () => {
     useEffect(()=>{
         fetchList();
 		fetchCanvas();
+		if (canvas && canvas.lowerCanvasEl) canvas.dispose();
     }, []);
 
     // Delete saved canvas
@@ -47,7 +49,7 @@ const SketchSetting = () => {
 		if (state.id){
 			try {
 				const response = await axios.get('/api/canvas/'+state.id);
-				setCanvas(response.data);
+				setCanvasInfo(response.data);
 			} catch (error) {
 				console.log(error);
 			}
