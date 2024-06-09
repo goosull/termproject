@@ -65,7 +65,7 @@ ID | Requirement | test Case ID
 --- | --- | ---
 FR03-1-1 | 사용자로부터 로그인 결과를 요청받으면, frontend 서버는 backend 서버로 일치 여부 결과 데이터를 요청한다. | TC11-1
 
-### 3.1.4. 유저 정보 추가, 삭제 요청 처리
+#### 3.1.4. 유저 정보 추가, 삭제 요청 처리
 ID | Requirement | test Case ID
 --- | --- | ---
 FR03-2-1 | 사용자로부터 유저 정보 추가 요청을 받으면, frontend서버는 backend 서버로 사용자 추가 요청을한다. | TC12-1
