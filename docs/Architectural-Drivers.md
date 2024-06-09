@@ -34,6 +34,8 @@ Sketch App은 WebOS TV 상에서 스케치, 그리기 기능과 스케치 저장
 사용자가 그림을 그리는 canvas를 표시하고 사용자가 로그인 하여 스케치 저장, 불러오기 기능을 사용할 수 있는 frontend
 서버와 사용자 정보와 스케치 정보를 전달받아 데이터베이스에 저장하고, frontend와 데이터베이스 간의 데이터의 전송 및 삭제
 요청을 처리하는 기능을 담당하는 backend 서버로 분리하여 구현한다.
+![system_context](system_context.png)
+ 
 
 ## 3. 요구사향(Requirements)
 ---
@@ -43,8 +45,8 @@ Sketch App은 WebOS TV 상에서 스케치, 그리기 기능과 스케치 저장
 #### 3.1.1. Client로부터 입력받을 interface 제공
 ID | Requirement | API ID | Test Case ID
 --- | --- | --- | ---
-FR01-1 | client로부터 유저 정보를 전달 받으면, backend 서버는 데이터베이스의 필드에 맞게 파싱한다.<br>-데이터베이스의 필드에는 다음 요소들이 포함되어야 한다<br><ul><li>_id: 유저를 구분할 고유한 ID</li><li>name: 유저의 이름</li><li>passwd: 유저의 비밀번호</li></ul> | <ul><li>BA01-2</li><li>BA01-4</li><li>BA01-5</li></ul> | <ul><li>TC01-1</li><li>TC01-2</li><li>TC01-3</li></ul>
-FR01-2 | backend 서버는 필드에 맞게 파싱된 데이터를 데이터베이스에 저장한다. |  <ul><li>BA01-2</li><li>BA01-4</li><li>BA01-5</li></ul> | <ul><li>TC01-1</li><li>TC01-2</li><li>TC01-3</li></ul> 
+FR01-1 | client로부터 유저 정보를 전달 받으면, backend 서버는 데이터베이스의 필드에 맞게 파싱한다.<br>-데이터베이스의 필드에는 다음 요소들이 포함되어야 한다<br><ul><li>_id: 유저를 구분할 고유한 ID</li><li>name: 유저의 이름</li><li>passwd: 유저의 비밀번호</li></ul> | <ul><li>BA01-2</li><li>BA01-4</li></ul> | <ul><li>TC01-1</li><li>TC01-2</li></ul>
+FR01-2 | backend 서버는 필드에 맞게 파싱된 데이터를 데이터베이스에 저장한다. |  <ul><li>BA01-2</li><li>BA01-4</li></ul> | <ul><li>TC01-1</li><li>TC01-2</li></ul> 
 FR01-3 | client로부터 캔버스(스케치) 정보를 전달 받으면, backend 서버는 데이터베이스의 필드에 맞게 파싱한다.<br>-데이터베이스의 필드에는 다음 요소들이 포함되어야 한다<br><ul><li>_id: 캔버스를 구분할 고유한 ID</li><li>title: 캔버스의 제목</li><li>canvas: 캔버스 정보</li><li>thumb: 캔버스 대표이미지</li><li>user: 캔버스 접근 권한을 가진 유저정보</li></ul> | <ul><li>BA02-4</li><li>BA02-5</li><li>BA02-6</li><li>BA02-7</li></ul> | <ul><li>TC02-1</li><li>TC02-2</li><li>TC02-3</li><li>TC02-4</li></ul>
 FR01-4 | backend 서버는 필드에 맞게 파싱된 데이터를 데이터베이스에 저장한다. |  <ul><li>BA02-4</li><li>BA02-5</li><li>BA02-6</li><li>BA02-7</li></ul> | <ul><li>TC02-1</li><li>TC02-2</li><li>TC02-3</li><li>TC02-4</li></ul> 
 
