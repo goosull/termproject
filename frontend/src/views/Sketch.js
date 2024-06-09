@@ -199,7 +199,7 @@ const Sketch = () => {
 			}
 
 			canvas.on("mouse:down", e => { // color picker
-				if(colorPicker && canvas.isDrawingMode === false && canvas.isEraseMode === false){
+				if(drawingMode === 4 && canvas.isDrawingMode === false && canvas.isEraseMode === false){
 					const pointer = canvas.getPointer(e.e);
 					const color = canvas.getContext('2d').getImageData(pointer.x, pointer.y, 1, 1).data;
 					const hex = '#' + ColorToHex(color[0]) + ColorToHex(color[1]) + ColorToHex(color[2]);
@@ -337,7 +337,7 @@ const Sketch = () => {
 				value={pickerColor}
 				onChange={changeColor}
 				className={css.colorInput}
-				disabled = {drawingMode === 3}
+				disabled = {drawingMode === 3 || drawingMode === 2}
 			/>
 
 			<Slider
