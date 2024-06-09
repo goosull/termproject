@@ -22,7 +22,7 @@ User Object는 다음과 같습니다.
 
 | ID     | URL                        | HOST                        | METHOD |
 | ------ | -------------------------- | --------------------------- | ------ |
-|        | /api/users                 | localhost:4000              | GET    |
+|  BA-1A   | /api/users                 | localhost:4000              | GET    |
 
 ---
 
@@ -45,7 +45,7 @@ User Object는 다음과 같습니다.
 
 | ID     | URL             | HOST                        | METHOD |
 | ------ | --------------- | --------------------------- | ------ |
-|        | /api/users/     | localhost:4000              | POST   |
+|  BA-1B    | /api/users/     | localhost:4000              | POST   |
 
 ---
 
@@ -76,7 +76,7 @@ User Object는 다음과 같습니다.
 
 | ID     | URL              | HOST                        | METHOD |
 | ------ | ---------------- | --------------------------- | ------ |
-|        | /api/users/login | localhost:4000              | POST   |
+|    BA-1C | /api/users/login | localhost:4000              | POST   |
 
 ---
 
@@ -109,7 +109,7 @@ User Object는 다음과 같습니다.
 
 | ID     | URL             | HOST                        | METHOD |
 | ------ | --------------- | --------------------------- | ------ |
-|        | /api/users/:id     | localhost:4000           | PUT    |
+|  BA-1D   | /api/users/:id     | localhost:4000           | PUT    |
 
 ---
 
@@ -141,7 +141,7 @@ User Object는 다음과 같습니다.
 
 | ID     | URL             | HOST                        | METHOD |
 | ------ | --------------- | --------------------------- | ------ |
-|        | /api/users/:id  | localhost:4000             | DELETE   |
+|  BA-1E   | /api/users/:id  | localhost:4000             | DELETE   |
 
 ---
 
@@ -173,7 +173,7 @@ Canvas Object는 다음과 같습니다.
 
 | ID     | URL                        | HOST                        | METHOD |
 | ------ | -------------------------- | --------------------------- | ------ |
-|        | /api/canvas/               | localhost:4000              | GET    |
+|    BA-2A    | /api/canvas/               | localhost:4000              | GET    |
 
 ---
 
@@ -204,7 +204,7 @@ Canvas Object는 다음과 같습니다.
 
 | ID     | URL                        | HOST                        | METHOD |
 | ------ | -------------------------- | --------------------------- | ------ |
-|        | /api/canvas/:id            | localhost:4000              | GET    |
+|    BA-2B    | /api/canvas/:id            | localhost:4000              | GET    |
 
 ---
 
@@ -237,7 +237,7 @@ canvas id를 URL 상에 표기하여 전달합니다.
 
 | ID     | URL                        | HOST                        | METHOD |
 | ------ | -------------------------- | --------------------------- | ------ |
-|        | /api/canvas/thumb/:id      | localhost:4000              | GET    |
+|    BA-2C    | /api/canvas/thumb/:id      | localhost:4000              | GET    |
 
 ---
 
@@ -263,7 +263,7 @@ canvas id를 URL 상에 표기하여 전달합니다.
 
 | ID     | URL                        | HOST                        | METHOD |
 | ------ | -------------------------- | --------------------------- | ------ |
-|        | /api/canvas/               | localhost:4000              | POST   |
+|   BA-2D     | /api/canvas/               | localhost:4000              | POST   |
 
 ---
 
@@ -297,7 +297,7 @@ canvas id를 URL 상에 표기하여 전달합니다.
 
 | ID     | URL                        | HOST                        | METHOD |
 | ------ | -------------------------- | --------------------------- | ------ |
-|        | /api/canvas/:id             | localhost:4000              | PUT    |
+|   BA-2E     | /api/canvas/:id             | localhost:4000              | PUT    |
 
 ---
 
@@ -324,7 +324,7 @@ canvas id를 URL 상에 표기하여 전달합니다.
 
 ---
 
-#### 2.5. canvas 공유하기
+#### 2.6. canvas 공유하기
 canvas 공유하기 API는 데이터베이스에 존재하는 canvas의 id와 공유할 user의 id를 요청받아 해당 user도 canvas에 접근가능하도록 수정하는 API입니다.
 
 #### Request
@@ -332,7 +332,7 @@ canvas 공유하기 API는 데이터베이스에 존재하는 canvas의 id와 �
 canvas id를 URL 상에 표기하여 전달합니다.
 | ID     | URL                        | HOST                        | METHOD |
 | ------ | -------------------------- | --------------------------- | ------ |
-|        | /api/canvas/share/:id      | localhost:4000              | PUT    |
+|   BA-2F     | /api/canvas/share/:id      | localhost:4000              | PUT    |
 
 ---
 
@@ -358,7 +358,7 @@ canvas id를 URL 상에 표기하여 전달합니다.
 
 ---
 
-#### 2.6. canvas 삭제하기
+#### 2.7. canvas 삭제하기
 
 canvas 삭제하기 API는 데이터베이스에 존재하는 canvas의 id와 저장할 canvas의 Canvas Object를 요청받아 데이터베이스를 업데이트하는 API입니다.
 
@@ -367,7 +367,7 @@ canvas 삭제하기 API는 데이터베이스에 존재하는 canvas의 id와 �
 삭제할 canvas id를 URL 상에 표기하여 전달합니다.
 | ID     | URL                        | HOST                        | METHOD |
 | ------ | -------------------------- | --------------------------- | ------ |
-|        | /api/canvas/delete/:id     | localhost:4000              | DELETE |
+|   BA-2G     | /api/canvas/delete/:id     | localhost:4000              | DELETE |
 
 ---
 
