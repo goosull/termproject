@@ -20,6 +20,7 @@ const Sketch = () => {
 	const [drawingMode, setDrawingMode] = useState(0);
 	const [strokeWidth, setStrokeWidth] = useState(10);
 	const [pickerColor, setPickerColor] = useState('#000000');
+	const [colorPicker, setIsColorPicker] = useState(false);
 	const {state, setState} = useContext(stateContext);
 	const [canvasHistory, setHistory] = useState({
 		history: [],
@@ -62,6 +63,10 @@ const Sketch = () => {
 	const [loginPopup, loginPopupOpen] = useState(false);
 	const [savePopup, savePopupOpen] = useState(false);
 	const [titlePopup, titlePopupOpen] = useState(false);
+	function ColorToHex(color) {
+		let hexadecimal = color.toString(16);
+		return hexadecimal.length === 1 ? '0' + hexadecimal : hexadecimal;
+	}
 
 	// Load all canvas of user
 	const fetchList = async() => {
@@ -131,31 +136,41 @@ const Sketch = () => {
 					setDrawingMode(0);
 					canvas.isDrawingMode = true;
 					canvas.isEraseMode = false;
-					canvas.freeDrawingBrush.color = '#000000';
-					setPickerColor('#000000')
+					canvas.freeDrawingBrush.color = pickerColor;
+					setIsColorPicker(false);
 					break;
 				case "Select":
 					setDrawingMode(1);
 					canvas.isDrawingMode = false;
 					canvas.isEraseMode = false;
+					setIsColorPicker(false);
 					break;
 				case "Stroke Erase":
 					setDrawingMode(2);
 					canvas.isDrawingMode = true;
 					canvas.isEraseMode = true;
 					canvas.freeDrawingBrush.color = bgColor.current;
+					setIsColorPicker(false);
 					break;
 				case "Normal Erase":
 					setDrawingMode(3);
 					canvas.isDrawingMode = true;
 					canvas.isEraseMode = false;
 					canvas.freeDrawingBrush.color = bgColor.current;
+					setIsColorPicker(false);
+
+					break;
+				case "Color Picker":
+					canvas.isDrawingMode = false;
+					setDrawingMode(4);
+					canvas.isEraseMode = false;
+					setIsColorPicker(true);
 					break;
 				default:
 					break;
 			}
 		}
-	}, [canvas]);
+	}, [canvas, pickerColor]);
 
 
 	useEffect(() => {
@@ -182,8 +197,18 @@ const Sketch = () => {
 				console.log(tmpCanvas);
 				canvas.loadFromJSON(tmpCanvas);
 			}
+
+			canvas.on("mouse:down", e => { // color picker
+				if(colorPicker && canvas.isDrawingMode === false && canvas.isEraseMode === false){
+					const pointer = canvas.getPointer(e.e);
+					const color = canvas.getContext('2d').getImageData(pointer.x, pointer.y, 1, 1).data;
+					const hex = '#' + ColorToHex(color[0]) + ColorToHex(color[1]) + ColorToHex(color[2]);
+					console.log(hex);
+					setPickerColor(hex);
+				}
+			});
 		}
-	}, [canvas]);
+	}, [canvas, colorPicker]);
 
 	useEffect(() => {
 		if (canvas) {
@@ -303,7 +328,7 @@ const Sketch = () => {
 			<Dropdown
 				backgroundOpacity="opaque"
 				selected={drawingMode}
-				children={["Paint", "Select", "Stroke Erase", "Normal Erase"]}
+				children={["Paint", "Select", "Stroke Erase", "Normal Erase", "Color Picker"]}
 				onSelect={swapMode}
 			/>
 			<input
@@ -312,6 +337,7 @@ const Sketch = () => {
 				value={pickerColor}
 				onChange={changeColor}
 				className={css.colorInput}
+				disabled = {drawingMode === 3}
 			/>
 
 			<Slider
