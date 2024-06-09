@@ -10,7 +10,13 @@ const Sketch = () => {
 	const [isDrawingMode, setIsDrawingMode] = useState(true);
 	const [strokeWidth, setStrokeWidth] = useState(10);
 	const [pickerColor, setPickerColor] = useState('#fff333');
+	const [colorPicker, setIsColorPicker] = useState(false);
 	const bgColor = useRef('#FFFFFF');
+
+	function ColorToHex(color) {
+		let hexadecimal = color.toString(16);
+		return hexadecimal.length === 1 ? '0' + hexadecimal : hexadecimal;
+	  }
 
 	useEffect(() => {
 		setCanvas(
@@ -65,30 +71,40 @@ const Sketch = () => {
 					canvas.isDrawingMode = true;
 					setIsDrawingMode(true);
 					canvas.isEraseMode = false;
-					canvas.freeDrawingBrush.color = '#000000';
+					canvas.freeDrawingBrush.color = pickerColor;
+					setIsColorPicker(false);
 					break;
 				case "Select":
 					canvas.isDrawingMode = false;
 					setIsDrawingMode(false);
 					canvas.isEraseMode = false;
+					setIsColorPicker(false);
 					break;
 				case "Stroke Erase":
 					canvas.isDrawingMode = true;
 					setIsDrawingMode(true);
 					canvas.isEraseMode = true;
 					canvas.freeDrawingBrush.color = bgColor.current;
+					setIsColorPicker(false);
 					break;
 				case "Normal Erase":
 					canvas.isDrawingMode = true;
 					setIsDrawingMode(true);
 					canvas.isEraseMode = false;
 					canvas.freeDrawingBrush.color = bgColor.current;
+					setIsColorPicker(false);
+					break;
+				case "Color Picker":
+					canvas.isDrawingMode = false;
+					setIsDrawingMode(false);
+					canvas.isEraseMode = false;
+					setIsColorPicker(true);
 					break;
 				default:
 					break;
 			}
 		}
-	}, [canvas]);
+	}, [canvas, pickerColor]);
 
 	useEffect(() => {
 		if (canvas) {
@@ -105,8 +121,17 @@ const Sketch = () => {
 					canvas.remove(path); // 지우개 경로 자체도 제거
 				}
 			});
+			canvas.on("mouse:down", e => { // color picker
+				if(colorPicker && canvas.isDrawingMode === false && canvas.isEraseMode === false){
+					const pointer = canvas.getPointer(e.e);
+					const color = canvas.getContext('2d').getImageData(pointer.x, pointer.y, 1, 1).data;
+					const hex = '#' + ColorToHex(color[0]) + ColorToHex(color[1]) + ColorToHex(color[2]);
+					console.log(hex);
+					setPickerColor(hex);
+				}
+			});
 		}
-	}, [canvas]);
+	}, [canvas, colorPicker]);
 
 	useEffect(() => {
 		if (canvas) {
@@ -116,6 +141,7 @@ const Sketch = () => {
 
 	const changeColor = useCallback((e) => {
 		setPickerColor(e.target.value);
+		console.log(e.target.value);
 	}, []);
 
 	useEffect(() => {
@@ -146,7 +172,7 @@ const Sketch = () => {
 			<span style={{ marginLeft: '5px' }}>Mode</span>
 			<Dropdown
 				backgroundOpacity="opaque"
-				children={["Paint", "Select", "Stroke Erase", "Normal Erase"]}
+				children={["Paint", "Object Select", "Stroke Erase", "Normal Erase", "Color Picker"]}
 				onSelect={swapMode}
 			/>
 			<input
