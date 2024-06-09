@@ -8,7 +8,8 @@ API | Test Name | TEST Case ID | Test Data
 /api/users/:id | user 정보 삭제하기 | TC01-2 | {data: {}, status: 201, ...}
 /api/canvas/ | 새로운 canvas 저장하기 | TC02-1 | {data: CanvasObject, status: 201, ...}
 /api/canvas/:id | canvas 업데이트하기 | TC02-2 | {data: CanvasObject, status: 200, ...}
-/api/canvas/delete/:id | canvas 삭제하기 | TC02-3 | {data: "", status: 204, ...}
+/api/canvas/share/:id | canvas 공유하기 | TC02-3 | {data: CanvasObject, status: 200, ...}
+/api/canvas/delete/:id | canvas 삭제하기 | TC02-4 | {data: "", status: 204, ...}
 /api/users/ | 모든 user정보 가져오기 | TC03-1 | {data: UserObject\[\], status: 200, ...}
 /api/users/login | 로그인 요청 | TC03-2 | {..., data: {name: "user0", ...}, status: 201, ...}
 /api/canvas/ | 해당 user의 모든 canvas 불러오기 | TC03-3 | {data: CanvasObject\[\], status: 200, ...}
