@@ -13,7 +13,7 @@ API | Test Name | TEST Case ID | Test Data
 /api/users/login | 로그인 요청 | TC03-2 | {..., data: {name: "user0", ...}, status: 201, ...}
 /api/canvas/ | 해당 user의 모든 canvas 불러오기 | TC03-3 | {data: CanvasObject\[\], status: 200, ...}
 /api/canvas/:id | 특정 id의 canvas 불러오기 | TC03-4 | {data:{_id: "6665...", title: "test", canvas: CanvasObject, thumb: "data:image/png;base64,..."}, status:200, ...}
-/api/canvas/thumb/:id | 특정 id의 canvas 대표이미지 불러오기 | TC03-5 | .
+/api/canvas/thumb/:id | 특정 id의 canvas 대표이미지 불러오기 | TC03-5 | {data: "data:image/png;base64,iVBORw0KGgoAAAANSU...", status: 200, ...}
 
 ---
 ## Frontend System Test Cases
@@ -43,5 +43,5 @@ Test Case ID: TC14-1
 Test Step | Test Data | Expected Result 
 --- | --- | --- |
 사용자가 캔버스 추가 버튼을 누른 후 저장 버튼을 누른다. | localhost:8080 | 새로운 캔버스를 리스트에서 확인할 수 있다.
-사용자가 기존 캔버스를 수정하고 저장 버튼을 누른다. | localhost:8080 | 업데이트된 캔버스 대표 이미지를 리스트에서 확인할 수 있다.
+사용자가 기존 캔버스를 수정하고 저장 버튼을 누른다. |  | 업데이트된 캔버스 대표 이미지를 리스트에서 확인할 수 있다.
 사용자가 캔버스 삭제 버튼을 누른다. |   | 이전 화면으로 이동되고 삭제된 캔버스를 리스트에서 확인할 수 없다.
