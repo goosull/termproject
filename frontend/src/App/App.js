@@ -4,6 +4,9 @@ import Panels from '@enact/sandstone/Panels';
 import Main from '../views/Main';
 import {useBackHandler, useCloseHandler, useDocumentEvent} from './AppState';
 import {isDevServe} from '../libs/utils';
+import { indexContext } from './Context';
+import { stateContext } from './Context';
+import SketchMain from '../views/SketchMain';
 
 /* istanbul ignore next*/
 if (isDevServe()) {
@@ -18,20 +21,31 @@ if (isDevServe()) {
 }
 
 const App = props => {
+	const [index, setIndex] = useState(0);
+	const [state, setState] = useState({
+        canvasList: [],
+		title: '',
+		id: null, // id of current (opened) scatch. null means new scatch.
+    });
 	const [skinVariants, setSkinVariants] = useState({highContrast: false});
 	const handleBack = useBackHandler();
 	const handleClose = useCloseHandler();
 	useDocumentEvent(setSkinVariants);
 
 	return (
-		<Panels
-			{...props}
-			skinVariants={skinVariants}
-			onBack={handleBack}
-			onClose={handleClose}
-		>
-			<Main />
-		</Panels>
+		<stateContext.Provider value={{state, setState}}>
+		<indexContext.Provider value={{index, setIndex}}>
+			<Panels
+				{...props}
+				index={index}
+				skinVariants={skinVariants}
+				onBack={handleBack}
+				onClose={handleClose}
+			>
+				<Main />
+				<SketchMain />
+			</Panels>
+		</indexContext.Provider></stateContext.Provider>
 	);
 };
 
