@@ -321,7 +321,12 @@ const Sketch = () => {
 				iconOnly='true'
 				onClick={doRedo}
 			/>
-
+			<Button
+				icon="trash"
+				backgroundOpacity="opaque"
+				iconOnly='true'
+				onClick={handleDelete}
+			/>
 			<span style={{ marginLeft: '5px' }}>Mode</span>
 			<Dropdown
 				backgroundOpacity="opaque"
