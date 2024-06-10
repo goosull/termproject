@@ -322,7 +322,7 @@ const Sketch = () => {
 				onClick={doRedo}
 			/>
 			<Button
-				icon="trash"
+				icon="closex"
 				backgroundOpacity="opaque"
 				iconOnly='true'
 				onClick={handleDelete}
